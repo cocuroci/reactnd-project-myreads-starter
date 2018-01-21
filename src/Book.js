@@ -1,16 +1,18 @@
 import React from 'react'
 import * as Shelves from './Shelves'
 
-const Book = ({ book }) => (
+const Book = ({ book, updateBook }) => (
     <div className="book">
         <div className="book-top">
             <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.smallThumbnail})` }}></div>
             <div className="book-shelf-changer">
-                <select>
+                <select value={book.shelf} onChange={(event) => {
+                    updateBook({id: book.id}, event.target.value)
+                }}>
                     <option value="none" disabled>Move to...</option>
-                    <option value="currentlyReading" selected={book.shelf === Shelves.CURRENTLY_READING}>Currently Reading</option>
-                    <option value="wantToRead" selected={book.shelf === Shelves.WANT_TO_READ}>Want to Read</option>
-                    <option value="read" selected={book.shelf === Shelves.READ}>Read</option>
+                    <option value="currentlyReading">Currently Reading</option>
+                    <option value="wantToRead">Want to Read</option>
+                    <option value="read">Read</option>
                     <option value="none">None</option>
                 </select>
             </div>
