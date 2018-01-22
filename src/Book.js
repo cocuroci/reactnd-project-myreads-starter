@@ -1,5 +1,4 @@
 import React from 'react'
-import * as Shelves from './Shelves'
 
 const Book = ({ book, updateBook }) => (
     <div className="book">

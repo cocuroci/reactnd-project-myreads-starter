@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import _ from 'lodash'
 import Book from './Book'
 import * as BooksAPI from './BooksAPI'
 
@@ -11,11 +12,17 @@ class BookSearch extends Component {
 
     updateQuery = (query) => {
         this.setState({ query })
-        
-        BooksAPI.search(query)
-            .then((books) => this.setState({ books }))
-            .catch((error) => alert(error))
+        this.search(query)
     }
+
+    search = _.debounce(query => {
+        BooksAPI.search(query)
+            .then((result) => {
+                const books =  _.isArray(result) ? result : []
+                this.setState({ books })
+            })
+            .catch((error) => alert(error))
+    }, 1000)
 
     render() {
         return (
@@ -35,7 +42,10 @@ class BookSearch extends Component {
                     <ol className="books-grid">
                         {this.state.books.map((book, index) => (
                             <li key={index}>
-                                <Book book={book} /> 
+                                <Book
+                                    book={book}
+                                    updateBook={this.props.updateBook}
+                                /> 
                             </li>
                         ))}
                     </ol>
