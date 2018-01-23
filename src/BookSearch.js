@@ -1,34 +1,28 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import _ from 'lodash'
 import Book from './Book'
-import * as BooksAPI from './BooksAPI'
+import _ from 'lodash'
 
 class BookSearch extends Component {
     state = {
-        query: '',
-        books: []
+        query: ''
     }
 
     updateQuery = (query) => {
         this.setState({ query })
-        this.search(query)
+        this.props.searchBooks(query)
     }
 
-    search = _.debounce(query => {
-        BooksAPI.search(query)
-            .then((result) => {
-                const books =  _.isArray(result) ? result : []
-                this.setState({ books })
-            })
-            .catch((error) => alert(error))
-    }, 1000)
+    clearSearch = () => {
+        this.props.clearSearch()
+    }
 
     render() {
+        const searchedBooks = _.orderBy(this.props.searchedBooks, ['title'], ['asc'])
         return (
             <div className="search-books">
                 <div className="search-books-bar">
-                    <Link to="/" className="close-search">Close</Link>
+                    <Link onClick={this.clearSearch} to="/" className="close-search">Close</Link>
                     <div className="search-books-input-wrapper">
                         <input 
                             onChange={(event) => this.updateQuery(event.target.value)}
@@ -40,7 +34,7 @@ class BookSearch extends Component {
                 </div>
                 <div className="search-books-results">
                     <ol className="books-grid">
-                        {this.state.books.map((book, index) => (
+                        {searchedBooks.map((book, index) => (
                             <li key={index}>
                                 <Book
                                     book={book}
