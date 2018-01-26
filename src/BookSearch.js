@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import Book from './Book';
 import _ from 'lodash';
 
 class BookSearch extends Component {
+  static propTypes = {
+    searchedBooks: PropTypes.array.isRequired,
+    clearSearch: PropTypes.func.isRequired,
+    searchBooks: PropTypes.func.isRequired,
+    updateBook: PropTypes.func.isRequired,
+  };
+
   state = {
     query: '',
   };
