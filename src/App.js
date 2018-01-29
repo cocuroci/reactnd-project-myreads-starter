@@ -24,7 +24,22 @@ class BooksApp extends React.Component {
 
   updateBook = (book, shelf) => {
     BooksAPI.update(book, shelf)
-      .then(() => this.getAllBooks())
+      .then(() => {
+        const currentBook = {
+          ...this.state[
+            this.state.searchedBooks.length > 0 ? 'searchedBooks' : 'books'
+          ].find(b => book.id === b.id),
+          shelf,
+        };
+
+        this.setState(prevState => {
+          return {
+            books: prevState.books
+              .filter(book => book.id !== currentBook.id)
+              .concat([currentBook]),
+          };
+        });
+      })
       .catch(error => console.log(error));
   };
 
